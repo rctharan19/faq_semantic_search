@@ -1,146 +1,166 @@
-# FAQ Semantic Search Engine with ChromaDB and LLM-Powered Answer Generation
+# 🔍 FAQ Semantic Search Engine
 
-## Overview
-
-This project implements an intelligent FAQ retrieval system using semantic search and Large Language Models (LLMs). Instead of relying on traditional keyword matching, the system converts FAQ entries into vector embeddings and stores them in ChromaDB for efficient similarity search.
-
-When a user submits a query, the engine retrieves the most relevant FAQs and uses them as context for an LLM to generate accurate, grounded responses with source attribution and confidence scores.
-
-This project demonstrates the core concepts behind Retrieval-Augmented Generation (RAG) systems.
+A production-ready FAQ retrieval system powered by **semantic search** and **LLM-grounded answer generation** — the foundational pattern behind Retrieval-Augmented Generation (RAG).
 
 ---
 
-## Features
+## 📌 What This Does
 
-* Semantic search using vector embeddings
-* ChromaDB vector database integration
-* Metadata-based FAQ categorization
-* Top-k FAQ retrieval
-* LLM-powered grounded answer generation
-* Source attribution with similarity scores
-* Out-of-scope query detection
-* Modular and extensible architecture
+Traditional keyword search fails when users phrase questions differently from how FAQs are written. This system solves that by understanding *meaning*, not just matching words.
 
----
-
-## Tech Stack
-
-* Python
-* ChromaDB
-* Sentence Transformers
-* GPT-OSS / OpenAI-compatible LLM
-* NumPy
+| Step | What Happens |
+|------|-------------|
+| **Index** | FAQ entries are embedded using sentence-transformers and stored in ChromaDB |
+| **Retrieve** | User query is embedded and compared via cosine similarity to find top-3 FAQs |
+| **Generate** | Retrieved FAQs are passed as context to an LLM to produce a grounded answer |
+| **Attribute** | Each response includes source FAQs with confidence scores |
 
 ---
 
-## Project Architecture
+## 🏗️ Architecture
 
+```
 User Query
-↓
-Embedding Model
-↓
-ChromaDB Vector Search
-↓
-Top-K Relevant FAQs
-↓
-LLM Context Construction
-↓
-Grounded Answer Generation
-↓
+    │
+    ▼
+[Embedding Model]         ← sentence-transformers (local)
+    │
+    ▼
+[ChromaDB Vector Store]   ← cosine similarity search → Top-K FAQs
+    │
+    ▼
+[LLM via OpenRouter]      ← context-grounded generation
+    │
+    ▼
 Answer + Source Attribution
+```
+
+This is the **RAG (Retrieval-Augmented Generation)** pattern — retrieve relevant context first, then generate, rather than relying on the LLM's parametric memory alone.
 
 ---
 
-## Dataset Structure
+## 🗂️ Project Structure
 
-Each FAQ entry contains:
-
-```python
-{
-    "question": "...",
-    "answer": "...",
-    "category": "..."
-}
 ```
-
-Categories include:
-
-* Account
-* Billing
-* Security
-* Technical
-
----
-
-## Example Queries
-
-### Password Reset
-
-Query:
-
-```text
-I forgot my login credentials
-```
-
-Retrieved FAQ:
-
-```text
-How do I reset my password?
-```
-
-### Subscription Cancellation
-
-Query:
-
-```text
-I want to stop my subscription
-```
-
-Retrieved FAQ:
-
-```text
-How do I cancel my subscription?
-```
-
-### API Rate Limits
-
-Query:
-
-```text
-How many API calls can I make per hour?
-```
-
-Retrieved FAQ:
-
-```text
-What is the API rate limit?
+faq-semantic-search/
+├── faq_search.py        # Main pipeline (index → retrieve → generate)
+├── requirements.txt     # Python dependencies
+├── .env.example         # API key template
+├── .gitignore
+└── README.md
 ```
 
 ---
 
-## Future Improvements
+## ⚙️ Setup
 
-* Hybrid Search (Keyword + Semantic Search)
-* Category-Based Filtering
-* Conversation Memory
-* Multi-Language Support
-* Web Interface using Streamlit
-* Full RAG Pipeline Integration
-* Real Customer Support Dataset
+### 1. Clone the repo
+```bash
+git clone https://github.com/synthex25/faq-semantic-search.git
+cd faq-semantic-search
+```
+
+### 2. Create and activate a virtual environment
+```bash
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Set your API key
+```bash
+cp .env.example .env
+# Edit .env and paste your OpenRouter API key
+```
+
+Or export it directly:
+```bash
+export OPENROUTER_API_KEY=your_key_here   # macOS/Linux
+set OPENROUTER_API_KEY=your_key_here      # Windows CMD
+```
+
+> Get a free API key at [openrouter.ai](https://openrouter.ai)
 
 ---
 
-## Learning Outcomes
+## ▶️ Run
 
-Through this project, I learned:
+```bash
+python faq_search.py
+```
 
-* Vector embeddings
-* Semantic similarity search
-* ChromaDB indexing and retrieval
-* Metadata filtering
-* Context-aware answer generation
-* Fundamentals of Retrieval-Augmented Generation (RAG)
+**Sample output:**
+```
+🚀  FAQ Semantic Search Engine — RAG Foundation Demo
+
+✅  Indexed 10 FAQs into ChromaDB collection 'faq_knowledge_base'
+
+============================================================
+🔍  Query: I forgot my password, what should I do?
+============================================================
+
+📚  Top-3 Retrieved FAQs:
+  1. [account   ]  confidence=0.9312  ██████████████████
+     Q: How do I reset my password?
+     A: Go to the login page and click 'Forgot Password'...
+
+🤖  Generated Answer:
+  To reset your password, go to the login page and click
+  'Forgot Password'. Enter your registered email and you'll
+  receive a reset link valid for 24 hours. [Source: FAQ 1]
+
+📌  Source Attribution:
+  [1] "How do I reset my password?"  (confidence: 0.9312)
+```
 
 ---
 
+## 🧰 Tech Stack
 
+| Component | Library / Service |
+|-----------|------------------|
+| Vector store | [ChromaDB](https://www.trychroma.com/) |
+| Embeddings | `sentence-transformers` (via ChromaDB default EF) |
+| LLM | [OpenRouter](https://openrouter.ai) — any OSS model |
+| Similarity | Cosine distance (HNSW index) |
+| Language | Python 3.9+ |
+
+---
+
+## 🔧 Customise
+
+- **Swap the LLM**: Change `MODEL_NAME` in `faq_search.py` to any model on OpenRouter (e.g. `google/gemma-2-9b-it`, `meta-llama/llama-3-8b-instruct`).
+- **Add your own FAQs**: Edit the `FAQ_DATABASE` list — add as many `{question, answer, category}` dicts as needed.
+- **Filter by category**: Pass `where={"category": "billing"}` to `collection.query()` for category-scoped search.
+- **Persist the index**: Replace `chromadb.Client()` with `chromadb.PersistentClient(path="./chroma_db")` to avoid re-indexing on every run.
+
+---
+
+## 📚 Concepts Demonstrated
+
+- **Semantic embeddings** — representing meaning as vectors
+- **Vector similarity search** — cosine distance in high-dimensional space
+- **Metadata filtering** — ChromaDB `where` clauses for scoped retrieval
+- **Context-grounded generation** — preventing hallucination by anchoring the LLM to retrieved facts
+- **Source attribution** — confidence scores for retrieved evidence
+- **RAG pipeline foundation** — retrieve → augment → generate
+
+---
+
+## 🛠️ Built As Part Of
+
+**LLM API Integration Course** — Step 8 Mini-Project: FAQ Semantic Search Engine  
+Builds toward full RAG pipelines with document chunking, hybrid search, and re-ranking.
+
+---
+
+## 📄 License
+
+MIT — free to use, modify, and build upon.
