@@ -153,4 +153,5 @@ python faq_search.py
 - **RAG pipeline foundation** — retrieve → augment → generate
 
 ---
+---
 
