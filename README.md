@@ -154,9 +154,3 @@ python faq_search.py
 
 ---
 
-## 🛠️ Built As Part Of
-
-**LLM API Integration Course** — Step 8 Mini-Project: FAQ Semantic Search Engine  
-Builds toward full RAG pipelines with document chunking, hybrid search, and re-ranking.
----
-MIT — free to use, modify, and build upon.
