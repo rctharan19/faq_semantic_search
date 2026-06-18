@@ -143,10 +143,4 @@ Through this project, I learned:
 
 ---
 
-## Author
 
-Elsie S
-
-B.Tech Computer Science Engineering
-
-SASTRA University
