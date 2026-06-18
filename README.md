@@ -56,8 +56,8 @@ faq-semantic-search/
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/synthex25/faq-semantic-search.git
-cd faq-semantic-search
+git clone https://github.com/<your-username>/faq_semantic_search.git
+cd faq_semantic_search
 ```
 
 ### 2. Create and activate a virtual environment
@@ -161,6 +161,5 @@ Builds toward full RAG pipelines with document chunking, hybrid search, and re-r
 
 ---
 
-## 📄 License
 
 MIT — free to use, modify, and build upon.
