@@ -56,7 +56,7 @@ faq-semantic-search/
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/<your-username>/faq_semantic_search.git
+git clone https://github.com/rctharan19/faq_semantic_search.git
 cd faq_semantic_search
 ```
 
